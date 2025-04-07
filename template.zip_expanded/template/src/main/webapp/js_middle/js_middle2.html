@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>JS - 중급(Storage2)</title>
+</head>
+<body>
+사용자가 클릭한 상품 : <span id="pd"></span><br>
+<input type="button" value="스토리지 삭제" onclick="storage_del()">
+</body>
+<script>
+function storage_del(){
+	localStorage.clear();
+	sessionStorage.clear();
+}
+
+//스토리지에 있는 값을 HTML에 출력 (getItem)
+window.onload = function(){
+	var p = sessionStorage.getItem("userpd1")
+	localStorage.setItem("basket",p);
+	document.getElementById("pd").innerText = p;
+}
+</script>
+</html>
