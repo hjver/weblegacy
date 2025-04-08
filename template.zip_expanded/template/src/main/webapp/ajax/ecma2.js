@@ -2,3 +2,15 @@
 export function zzz(){
 	console.log("테스트");
 }
+export function aaa(){
+	var user = "홍길동"
+	console.log(user + "포인트 1500 입니다.")
+}
+export function bbb(){  //외부에서 호출이 가능한 (import) 함수
+	console.log("환영합니다.")
+	ccc();
+}
+
+function ccc(){  //내부 함수
+	console.log("ccc함수")
+}

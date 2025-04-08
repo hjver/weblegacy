@@ -5,17 +5,24 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 
 @Controller
 public class api_controller {
@@ -209,6 +216,139 @@ public class api_controller {
 			
 		}
 		
+		return null;
+	}
+	
+	//ECMA - Ajax(GET)
+	@GetMapping("/ajax/ajax9.do")
+	public String ajax9(ServletResponse res,
+			@RequestParam(name="mid") String mid
+			) {
+		try {
+			this.logger.info(mid);
+			this.pw = res.getWriter();
+			this.pw.write("ok");
+		}catch (Exception e) {
+			
+		}
+		
+		return null;
+	}
+	
+	//ECMA - Ajax(POST)
+	@PostMapping("/ajax/ajax10.do")
+	public String ajax10(ServletResponse res,
+			@RequestParam(name="mid") String mid
+			) {
+		try {
+			this.logger.info(mid);
+			this.pw = res.getWriter();
+			this.pw.write("ok");
+		}catch (Exception e) {
+			
+		}
+		
+		return null;
+	}
+	
+	//ECMA - POST통신 (배열방식) - array
+	@PostMapping("/ajax/ajax11.do")
+	/*//JSON.stringify => 전송시 @RequestBody
+	public String ajax11(ServletResponse res,
+			@RequestBody String data
+			) {
+	*/
+	/*
+	public String ajax11(ServletResponse res,
+			@RequestParam(name="mid") String mid,
+			@RequestParam(name="mname") String mname
+			) {
+	*/
+	public String ajax11(ServletResponse res,
+			@ModelAttribute api_dto dto
+			) {
+		try {
+			this.logger.info(dto.getMid());
+			this.logger.info(dto.getMname());
+			this.logger.info(dto.getMage().toString());
+			this.pw = res.getWriter();
+			this.pw.write("ok");
+		}catch (Exception e) {
+			
+		}
+		
+		return null;
+	}
+	
+	/*@PathVariable : URL 파라미터 값을 가져오는 어노테이션 {data} 가상의 파라미터 값
+	                  JSON.stringify을 처리하지 못함
+	*/
+	@PatchMapping("/ajax/ajax12.do/{data}")
+	public String ajax12(ServletResponse res,
+			@PathVariable(name="data") String data,
+			@RequestBody String myinfo
+			) {
+		try {
+			this.pw = res.getWriter();
+			if(data.equals("patch_myinfo")) {
+				this.logger.info(myinfo);
+				this.pw.write("ok");			
+			}
+			
+			
+			//this.logger.info(mid);
+			//String user[] = mid.split(",");
+			//this.logger.info(user[1]);
+			//this.logger.info(user[2]);
+			
+		}catch (Exception e) {
+			
+		}
+		return null;
+	}
+	
+	//@RequestParam("midx") List<String> midx : POST FormData()시에 List<String>
+	//@RequestPart : MultipartFile
+	//@RequestParam : name 또는 파라미터
+	//@ResponseBody + @Mapping : method 선언시에 사용
+	//@ResponseBody : 응답에 대한 결과값을 해당 메소드에 바로 출력할 때 사용
+	//@RequestBody : 배열값을 처리
+	@DeleteMapping("/ajax/ajax13/{key}")  //delete (FormData()는 안됨
+	public String ajax13(HttpServletResponse res,
+			@PathVariable(name="key") String key,
+			@RequestBody String midx
+			) {
+		try {
+			this.pw = res.getWriter();
+			if(key.equals("a123456")) {
+				this.logger.info(midx);
+				this.pw.write("ok");
+			}else {
+				
+			}
+		}catch (Exception e) {
+			
+		}
+		return null;
+	}
+	
+	@PutMapping("/ajax/ajax14/{key}")  //insert (DTO 기본)
+	public String ajax14(HttpServletResponse res,
+			@PathVariable(name="key") String key,
+			@RequestBody api_dto dto
+			) {
+		try {
+			this.pw = res.getWriter();
+			if(key.equals("a123456")) {
+				this.logger.info(dto.getPd1());
+				this.logger.info(dto.getPd2());
+				this.pw.write("ok");
+			}else {
+				this.pw.write("key error");
+			}
+		}catch (Exception e) {
+			
+		}
 		return null;
 	}
 }
