@@ -1,9 +1,12 @@
 package api;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,11 +21,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
+
+/* CRUD
+ * C : @PutMapping
+ * D : @DeleteMapping
+ * U : @PatchMapping
+ *     jackson => ajax => JSON
+ *     GSON 라이브러리
+ *     예) /api/data.do/{data}
+ * 
+ * R : @GetMapping, @PostMapping => JSON 허락 예) /api/data.do
+ */
 
 @Controller
 public class api_controller {
@@ -40,6 +51,11 @@ public class api_controller {
 	//js - Ajax(GET)
     PrintWriter pw = null;
     //문자열 + ok, no, error => GET (product)
+    
+    @Resource(name="api_dao")
+    public api_dao dao;
+    
+    
 	@GetMapping("/ajax/ajax1.do")
 	public String ajax1(@RequestParam(name="product") String data, ServletResponse res) {
 		//Front-end에서 보낸 nqme을 원시배열로 받을 경우 자동으로 배열로 변경처리
@@ -332,17 +348,34 @@ public class api_controller {
 		return null;
 	}
 	
-	@PutMapping("/ajax/ajax14/{key}")  //insert (DTO 기본)
+	@PostMapping("/ajax/ajax14/{key}")  //insert (DTO 기본)
 	public String ajax14(HttpServletResponse res,
 			@PathVariable(name="key") String key,
-			@RequestBody api_dto dto
+			//@RequestParam(name="pd1") String pd1
+			@RequestBody String data
 			) {
 		try {
 			this.pw = res.getWriter();
 			if(key.equals("a123456")) {
-				this.logger.info(dto.getPd1());
-				this.logger.info(dto.getPd2());
-				this.pw.write("ok");
+				this.logger.info(data);
+				
+				Map<String, String> mp = new HashMap<String, String>();
+				JSONObject jo = new JSONObject(data);
+				Iterator<String> keys = jo.keys();
+				while(keys.hasNext()) {
+					String keynm = keys.next(); //키명
+					mp.put(keynm, jo.getString(keynm).toString());
+				}
+				this.logger.info(mp.toString());
+				int result = this.dao.pdtest(mp);
+				this.logger.info(String.valueOf(result));
+				if(result > 0) {
+					this.pw.write("ok");
+				}
+				else {
+					this.pw.write("no");
+				}
+				
 			}else {
 				this.pw.write("key error");
 			}

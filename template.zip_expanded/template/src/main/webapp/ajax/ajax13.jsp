@@ -7,6 +7,35 @@
 <title>Ajax - @PutMapping => DTO로 처리</title>
 <!-- JQ -->
 <script src="./jquery.js"></script>
+<script>
+	$(function(){
+		
+		$("#jqbtn").click(function(){
+			//$("#pd1").val(); => 사용자가 입력한 값을 가져옴
+			$.ajax({
+				url : "./ajax14/a123456",
+				cache : false,
+				type : "PUT",
+				dataType : "HTML",
+				contentType : "application/json",
+				data: JSON.stringify({
+					pd1 : $("#pd1").val(),
+					pd2 : $("#pd2").val(),
+					pd3 : $("#pd3").val(),
+					pd4 : $("#pd4").val(),
+					pd5 : $("#pd5").val(),
+				}),
+				async : true,
+				success:function($result){
+					console.log($result)
+				},
+				error:function(){
+					console.log("Back-end와 통신오류 발생!!")
+				}
+			});
+		});
+	});
+</script>
 </head>
 <body>
 입력값 : <input type="text" id="pd1"><br>
@@ -14,7 +43,9 @@
 입력값 : <input type="text" id="pd3"><br>
 입력값 : <input type="text" id="pd4"><br>
 입력값 : <input type="text" id="pd5"><br>
-<input type="button" value="AJAX 전송" onclick="ajax_put()">
+<input type="button" value="jquery 전송" id="jqbtn"><br>
+<input type="button" value="AJAX 전송" onclick="ajax_put()"><br>
+<input type="button" value="ES AJAX 전송" id="btn"><br>
 </body>
 <!-- JS -->
 <script>
@@ -42,7 +73,13 @@ function ajax_put(){
 	http.setRequestHeader("content-type","application/json");
 	http.onload = function(){
 		result = this.response;
-		console.log(result);
+		if(result == "ok"){
+			alert("해당 데이터가 올바르게 저장되었습니다.");
+			location.reload();
+		}
+		else{
+			alert("해당 정보가 올바르게 저장되지 않았습니다.")
+		}
 	}
 	http.onerror = function(){
 		console.log("통신오류!!");
@@ -52,6 +89,9 @@ function ajax_put(){
 </script>
 <!-- ES -->
 <script type="module">
-
+import {api_insert} from "./ajax13.js";
+document.querySelector("#btn").addEventListener("click",function(){
+	new api_insert().api_put();
+});
 </script>
 </html>
