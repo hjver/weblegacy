@@ -47,4 +47,10 @@ public class membership_DAO implements membership_mapper{
 		List<membership_DTO> all = this.st.selectList("id_info",this.mp);
 		return all;
 	}
+	
+	@Override
+	public int id_update(Map<String, String> map) {
+		int result = this.st.update("id_update",map);
+		return result;
+	}
 }

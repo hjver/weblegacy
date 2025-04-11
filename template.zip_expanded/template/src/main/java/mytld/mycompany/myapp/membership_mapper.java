@@ -10,4 +10,5 @@ public interface membership_mapper {
 	public String id_row(String mid);
 	public int member_join(membership_DTO dto);
 	public List<membership_DTO> id_info(String mid, String mpass);
+	public int id_update(Map<String, String> map); //개인정보 수정
 }

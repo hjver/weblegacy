@@ -11,10 +11,13 @@
 <input type="hidden" name="code" value="1">
 <input type="hidden" name="kakao_id" value="">
 <input type="hidden" name="kakao_nicknm" value="">
-아이디 : <input type="text" name="mid"><br>
+아이디 : <input type="text" name="mid" autocomplete="off"><br>
 패스워드 : <input type="password" name="mpass"><br>
 <input type="submit" value="로그인">
+<input type="checkbox" id="save_id">아이디 저장
 </form><br><br>
+<!-- 자동로그인 기능은 실제 로그인이 된 후에 백앤드가 로컬 스토리지에 저장
+단순 아이디 저장 기능은 프론트앤드가 로컬스토리지에 저장 -->
 <img src="./ajax/kakao_login.png" onclick="kakao_login()">
 <p id="token-result"></p>
 </body>
@@ -54,6 +57,29 @@
 
 
 <script>
+//window.onload = function() : 해당 페이지로 접속시 작동되는 함수
+window.onload = function(){
+	let userid = localStorage.getItem("userid");
+	if(userid != null){ //아이디 저장 기능 활성화시
+		frm.mid.value = userid;
+		document.querySelector("#save_id").checked=true;
+	}
+};
+
+
+document.querySelector("#save_id").addEventListener("click",function(e){
+	if(frm.mid.value==""){
+		alert("아이디를 입력하셔야만 해당 기능을 사용할 수 있습니다.");
+		this.checked = false;
+	}else{
+		if(this.checked==true){
+			localStorage.setItem("userid",frm.mid.value);
+		}else{
+			localStorage.clear();
+		}
+	}
+})
+
 //ECMA => submit 사용시 return, return false 가 앖음
 document.querySelector("#frm").addEventListener("submit",function(e){
 	e.preventDefault(); //강제정지

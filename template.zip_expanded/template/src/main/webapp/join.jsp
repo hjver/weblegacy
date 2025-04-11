@@ -28,7 +28,7 @@
 let kid = sessionStorage.getItem("mid");
 console.log(kid);
 let knick = sessionStorage.getItem("mnick");
-if(kid != "" && kid != null){
+if(kid != null){
 	document.querySelector("#ck").value="ok";
 	document.querySelector("#idck").style.display = "none";
 	frm.MCODE.value = 2;
